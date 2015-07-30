@@ -180,9 +180,10 @@ def enable_collectors(ctx, collectors, config_path, collectors_path):
     for name, prop in collectors.items():
         if 'path' in prop.keys():
             collector_dir = os.path.join(collectors_path, name)
-            os.mkdir(collector_dir)
-            collector_file = os.path.join(collector_dir, '{0}.py'.format(name))
-            ctx.download_resource(prop['path'], collector_file)
+            if not os.path.exists(collector_dir):
+                os.mkdir(collector_dir)
+                collector_file = os.path.join(collector_dir, '{0}.py'.format(name))
+                ctx.download_resource(prop['path'], collector_file)
 
         config = prop.get('config', {})
         config.update({'enabled': True,
